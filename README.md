@@ -14,6 +14,7 @@ This script automatically creates and manages local contexts of Valheim plugin d
 3. Select "More Apps" and scroll down.
 4. Select "Look for another app on this PC"
 5. Find and select Powershell.exe. It's usually located at "%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe"
+6. Double-click on PhValheim_wrapper.ps1
 
 <br>
 Here's a screenshot of the application running:
