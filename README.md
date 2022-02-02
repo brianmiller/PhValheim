@@ -4,7 +4,7 @@ This script automatically creates and manages local contexts of Valheim plugin d
 
 <strong>Simple steps to get it running:</strong>
 1. Download [PhValheim_wrapper.ps1](https://raw.githubusercontent.com/brianmiller/PhValheim/main/PhValheim_wrapper.ps1) (right-click, Save link as...)
-2. Right-click on PhValheim_wrapper.ps1 and select "Run with PowerShell"
+2. Right-click on the downloaded PhValheim_wrapper.ps1 file and select "Run with PowerShell"
 <br>
 
 <strong>If you want to simply double click on the script as if it were an application, you can change the default application used when opening PowerShell scripts:</strong>
