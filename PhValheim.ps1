@@ -6,7 +6,7 @@
 # Written and maintained by:
 #  * Brian Miller (brian@phospher.com) 
 ###############################################################################
-$VERSION="1.0"
+$VERSION="1.1"
 
 #Dirs
 $DATA_DIR = "$env:AppData\PhValheim"
@@ -65,7 +65,7 @@ do {
 	$Selection = Read-Host
 
 	if (!($Selection -match "^[0-9]")) {
-		Write-Host "Exiting..."
+		Write-Host "exiting..."
 		Start-Sleep -s 3
 		exit
 	}
@@ -75,7 +75,7 @@ until ($WORLDS[$selection-1])
 $WORLD = $WORLDS[$selection-1].Trim()
 
 if ($Selection -eq 0) {
-	Write-Host "Exiting..."
+	Write-Host "exiting..."
 	Start-Sleep -s 3
 	exit
 }
@@ -101,21 +101,32 @@ if (Test-Path $DATA_DIR/$WORLD) {
 }
 
 
+#Check local root files for doorstop libs
+if (Test-Path $STEAM_DIR/steamapps/common/Valheim/doorstop_config.ini) {
+	Write-Host "doorstop libs detected, continuing..."
+} else {
+	Write-Host "doorstop libs missing, downloading..."
+	$WebClient.DownloadFile("https://files.phospher.com/valheim/valheim_root_deps.zip","$STEAM_DIR/steamapps/common/Valheim/valheim_root_deps.zip")
+	Write-Host "extracting doorstop libs..."
+	Expand-Archive -Force -LiteralPath "$STEAM_DIR/steamapps/common/valheim/valheim_root_deps.zip" -DestinationPath "$STEAM_DIR/steamapps/common/Valheim/."
+}
+
+
 #Check local disk for World files and download if missing
 if (Test-Path $DATA_DIR/$WORLD/version.txt) {
-	Write-Host "Local version.txt file exists for $WORLD"
+	Write-Host "local version.txt file exists for $WORLD"
 } else {	
-	Write-Host "Local files for $WORLD do not exist, downloading..."
+	Write-Host "local files for $WORLD do not exist, downloading..."
 	Invoke-RestMethod https://files.phospher.com/valheim/$WORLD/version.txt -OutFile $DATA_DIR/$WORLD/version.txt
 	$WebClient.DownloadFile("https://files.phospher.com/valheim/$WORLD/$WORLD.zip","$DATA_DIR/$WORLD/$WORLD.zip")
-	Write-Host "Extracting files for $WORLD..."
+	Write-Host "extracting files for $WORLD..."
 	Expand-Archive -Force -LiteralPath "$DATA_DIR/$WORLD/$WORLD.zip" -DestinationPath "$DATA_DIR/$WORLD/."
 }
 
 
 #Check local disk to ensure World version file downloaded, else exit.
 if (!(Test-Path $DATA_DIR/$WORLD/version.txt)) {
-	Write-Host "Could not download world files, exiting..."
+	Write-Host "could not download world files, exiting..."
 	Start-Sleep -s 10
 	exit
 }
@@ -124,32 +135,33 @@ if (!(Test-Path $DATA_DIR/$WORLD/version.txt)) {
 $LOCAL_WORLD_VERSION = $(Get-Content $DATA_DIR/$WORLD/version.txt)
 
 
-#Check and ensure local files match remote files (download new and/or update as needed)
+#Check and ensure local files match remote files (download new and/or update as needed). If all is well, launch.
 if ($LOCAL_WORLD_VERSION -eq $REMOTE_WORLD_VERSION) {
-	Write-Host "Local($LOCAL_WORLD_VERSION) and Remote($REMOTE_WORLD_VERSION) versions match for $WORLD..."
-	Write-Host "Launching Valheim with $WORLD context..."
+	Write-Host "local($LOCAL_WORLD_VERSION) and Remote($REMOTE_WORLD_VERSION) versions match for $WORLD..."
+	Write-Host "launching Valheim with $WORLD context..."
 	& "$STEAM_DIR\steam.exe" -applaunch 892970 --doorstop-enable true --doorstop-target "$DATA_DIR/$WORLD/$WORLD/BepInEx/core/BepInEx.Preloader.dll"
 	
 	} else {
-		Write-Host "Local($LOCAL_WORLD_VERSION) and Remote($REMOTE_WORLD_VERSION) versions DO NOT match for $WORLD, updating..."
+		#If a mismatch is detected, updated and prepare to launch.
+		Write-Host "local($LOCAL_WORLD_VERSION) and Remote($REMOTE_WORLD_VERSION) versions DO NOT match for $WORLD, updating..."
 		Invoke-RestMethod https://files.phospher.com/valheim/$WORLD/version.txt -OutFile $DATA_DIR/$WORLD/version.txt
-		Write-Host "Downloading updatged files for $WORLD..."
+		Write-Host "downloading updated files for $WORLD..."
 		$WebClient.DownloadFile("https://files.phospher.com/valheim/$WORLD/$WORLD.zip","$DATA_DIR/$WORLD/$WORLD.zip")
 		$LOCAL_WORLD_VERSION = $(Get-Content $DATA_DIR/$WORLD/version.txt)
 		
 		if (!($LOCAL_WORLD_VERSION -eq $REMOTE_WORLD_VERSION)) {
-			Write-Host "Could not update local world version file for $WORLD, exiting..."
+			#If an update was needed but failed, exit.
+			Write-Host "could not update local world version file for $WORLD, exiting..."
 			Start-Sleep -s 10
 			exit
 		} else {	
-			Write-Host "Successfully updated local world files for $WORLD..."
-			
-			#Extract freshly downloaded World data and prepare to launch
-			Write-Host "Removing outdates files for $WORLD..."
+			#If an update was needed and successed, extract and prepare to launch.
+			Write-Host "successfully updated local world files for $WORLD..."
+			Write-Host "removing outdates files for $WORLD..."
 			Remove-Item "$DATA_DIR/$WORLD/$WORLD" -Recurse
-			Write-Host "Extracting files for $WORLD..."
+			Write-Host "extracting files for $WORLD..."
 			Expand-Archive -Force -LiteralPath "$DATA_DIR/$WORLD/$WORLD.zip" -DestinationPath "$DATA_DIR/$WORLD/."
-			Write-Host "Launching Valheim with $WORLD context..."
+			Write-Host "launching Valheim with $WORLD context..."
 			& "$STEAM_DIR\steam.exe" -applaunch 892970 --doorstop-enable true --doorstop-target "$DATA_DIR/$WORLD/$WORLD/BepInEx/core/BepInEx.Preloader.dll"
 		}
 }
