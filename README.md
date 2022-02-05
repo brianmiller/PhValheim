@@ -24,7 +24,7 @@ Here's a screenshot of the script running on Windows:
 
 ## Linux
 <strong>Simple steps to get it running:</strong>
-1. Download [PhValheim_wrapper.ps1](https://raw.githubusercontent.com/brianmiller/PhValheim/main/PhValheim_wrapper.ps1) (right-click, Save link as...)
+1. Download [PhValheim_wrapper.sh](https://raw.githubusercontent.com/brianmiller/PhValheim/main/PhValheim_wrapper.sh) (right-click, Save link as...)
 2. Run it from a terminal
 
 <br>
