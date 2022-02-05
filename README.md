@@ -1,7 +1,7 @@
 # PhValheim
 This script automatically creates and manages local contexts of Valheim plugin directories that are tied to specific worlds. All plugins will be kept in-sync between your local context and our remote world servers.
 <br>
-
+<h2>Windows</h2>
 <strong>Simple steps to get it running:</strong>
 1. Download [PhValheim_wrapper.ps1](https://raw.githubusercontent.com/brianmiller/PhValheim/main/PhValheim_wrapper.ps1) (right-click, Save link as...)
 2. Right-click on the downloaded PhValheim_wrapper.ps1 file and select "Run with PowerShell"
@@ -17,8 +17,17 @@ This script automatically creates and manages local contexts of Valheim plugin d
 6. Double-click on PhValheim_wrapper.ps1
 
 <br>
-Here's a screenshot of the application running:
+Here's a screenshot of the script running on Windows:
 
 ![image](https://user-images.githubusercontent.com/342276/152061803-5f2c1a68-ce02-45dc-826c-9c63905c044b.png)
 
-That's it.
+<br>
+<h2>Linux</h2>
+1. Download [PhValheim_wrapper.sh](https://raw.githubusercontent.com/brianmiller/PhValheim/main/PhValheim_wrapper.sh)
+2. Run it from a terminal
+
+<br>
+Here's a screenshot of the script running on Linux:
+
+
+
