@@ -20,10 +20,11 @@ This script automatically creates and manages local contexts of Valheim plugin d
 Here's a screenshot of the script running on Windows:
 
 ![image](https://user-images.githubusercontent.com/342276/152061803-5f2c1a68-ce02-45dc-826c-9c63905c044b.png)
-
 <br>
+
 ## Linux
-1. Download [PhValheim_wrapper.sh](https://raw.githubusercontent.com/brianmiller/PhValheim/main/PhValheim_wrapper.sh) (right-click, Save link as...)
+<strong>Simple steps to get it running:</strong>
+1. Download [PhValheim_wrapper.ps1](https://raw.githubusercontent.com/brianmiller/PhValheim/main/PhValheim_wrapper.ps1) (right-click, Save link as...)
 2. Run it from a terminal
 
 <br>
