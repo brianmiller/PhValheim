@@ -29,6 +29,7 @@ Here's a screenshot of the script running on Windows:
 
 <br>
 Here's a screenshot of the script running on Linux:
+![image](https://user-images.githubusercontent.com/342276/152626334-73bb9e66-a2da-42cb-9c54-83505e899dca.png)
 
 
 
