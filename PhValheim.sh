@@ -7,7 +7,7 @@
 # Written and maintained by:
 #  * Brian Miller (brian@phospher.com) 
 ###############################################################################
-VERSION="1.0"
+VERSION="1.1"
 
 #Dirs
 DATA_DIR="$HOME/.PhValheim"
@@ -155,7 +155,6 @@ select OPTION in $OPTIONS; do
 						steam -shutdown
 						break
 					fi
-				exit
 				done
 			fi
 		fi
