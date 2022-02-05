@@ -15,6 +15,11 @@ STEAM_DIR="$HOME/.local/share/Steam"
 VALHEIM_DIR="$STEAM_DIR/steamapps/common/Valheim"
 
 
+#Exit if root
+if [ "$USER" = "root" ]; then
+	echo "Negative, captain. We're not running as root. Exiting..."
+	exit 1
+fi
 
 #Stop everything if Steam isn't installed...
 if [ ! -f "$VALHEIM_DIR/valheim.x86_64" ]; then
