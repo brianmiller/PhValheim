@@ -3,7 +3,7 @@ This script automatically creates and manages local contexts of Valheim plugin d
 <br>
 ## Windows
 
-<h3>Note! Your PowerShell execution policy must be set to "bypass" to PowerShell scripts to run on your system.</h3>
+<h3>Note! Your PowerShell execution policy must be set to "bypass" to allow PowerShell scripts to run on your system.</h3>
 
 1. Open a PowerShell terminal as administrator "Start > PowerShell (right-click, run as Administrator)
 2. Type "Set-ExecutionPolicy bypass"
