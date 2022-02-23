@@ -6,12 +6,14 @@
 # Written and maintained by:
 #  * Brian Miller (brian@phospher.com) 
 ###############################################################################
-$VERSION="1.1"
+$VERSION="1.3"
 
 #Dirs
 $DATA_DIR = "$env:AppData\PhValheim"
 $STEAM_DIR = "${env:ProgramFiles(x86)}"+"\Steam"
 
+#Imports
+Import-Module BitsTransfer
 
 #Stop everything if Steam isn't installed...
 if (!(Test-Path "$STEAM_DIR\steam.exe")) {
@@ -47,7 +49,7 @@ if (Test-Path $DATA_DIR) {
 
 
 #Pull all worlds and store into $WORLDS
-$WORLDS = $(Invoke-RestMethod https://files.phospher.com/valheim/worlds.txt).Split("`n")
+$WORLDS = $(Invoke-RestMethod https://files.phospher.com/valheim/worlds_dev.txt).Split("`n")
 
 
 #Create useable webclient
@@ -55,6 +57,8 @@ $WebClient = New-Object System.Net.Webclient
 
 
 #Generate selectable list
+function drawMenu {
+
 do {
     $index = 1
         foreach ($WORLD in $WORLDS) {
@@ -72,13 +76,35 @@ do {
 	
 }
 until ($WORLDS[$selection-1])
-$WORLD = $WORLDS[$selection-1].Trim()
+$global:WORLD = $WORLDS[$selection-1].Trim()
+}
+
+drawMenu
+
+Write-Host $WORLD
 
 if ($Selection -eq 0) {
 	Write-Host "exiting..."
 	Start-Sleep -s 3
 	exit
 }
+
+
+#Install HD pack?
+function HDO {
+	if ($WORLD -eq "Install HD Texture Pack (HDO)") {
+		Write-Host "Installing HDO Texture Pack..."
+		$HDO_FILE_ID = $(Invoke-RestMethod https://files.phospher.com/valheim/hdo.txt)
+		Write-Host "Downloading archive file ID: '$HDO_FILE_ID'"
+		$WebClient.DownloadFile("https://drive.google.com/uc?export=download&confirm=t&id=$HDO_FILE_ID","$STEAM_DIR/steamapps/common/Valheim/hdo.zip")
+		Write-Host "extracting HDO assets..."
+		Expand-Archive -Force -LiteralPath "$STEAM_DIR/steamapps/common/valheim/hdo.zip" -DestinationPath "$STEAM_DIR/steamapps/common/Valheim/."
+		drawMenu
+		HDO
+	}
+}
+HDO
+
 
 #Download version of selected world
 $REMOTE_WORLD_VERSION = $(Invoke-RestMethod https://files.phospher.com/valheim/$WORLD/version.txt)
@@ -139,7 +165,7 @@ $LOCAL_WORLD_VERSION = $(Get-Content $DATA_DIR/$WORLD/version.txt)
 if ($LOCAL_WORLD_VERSION -eq $REMOTE_WORLD_VERSION) {
 	Write-Host "local($LOCAL_WORLD_VERSION) and Remote($REMOTE_WORLD_VERSION) versions match for $WORLD..."
 	Write-Host "launching Valheim with $WORLD context..."
-	& "$STEAM_DIR\steam.exe" -applaunch 892970 --doorstop-enable true --doorstop-target "$DATA_DIR/$WORLD/$WORLD/BepInEx/core/BepInEx.Preloader.dll"
+	& "$STEAM_DIR\steam.exe" -applaunch 892970 --doorstop-enable true --doorstop-target "$DATA_DIR/$WORLD/$WORLD/BepInEx/core/BepInEx.Preloader.dll" -console
 	
 	} else {
 		#If a mismatch is detected, updated and prepare to launch.
@@ -157,12 +183,12 @@ if ($LOCAL_WORLD_VERSION -eq $REMOTE_WORLD_VERSION) {
 		} else {	
 			#If an update was needed and successed, extract and prepare to launch.
 			Write-Host "successfully updated local world files for $WORLD..."
-			Write-Host "removing outdates files for $WORLD..."
+			Write-Host "removing outdated files for $WORLD..."
 			Remove-Item "$DATA_DIR/$WORLD/$WORLD" -Recurse
 			Write-Host "extracting files for $WORLD..."
 			Expand-Archive -Force -LiteralPath "$DATA_DIR/$WORLD/$WORLD.zip" -DestinationPath "$DATA_DIR/$WORLD/."
 			Write-Host "launching Valheim with $WORLD context..."
-			& "$STEAM_DIR\steam.exe" -applaunch 892970 --doorstop-enable true --doorstop-target "$DATA_DIR/$WORLD/$WORLD/BepInEx/core/BepInEx.Preloader.dll"
+			& "$STEAM_DIR\steam.exe" -applaunch 892970 --doorstop-enable true --doorstop-target "$DATA_DIR/$WORLD/$WORLD/BepInEx/core/BepInEx.Preloader.dll" -console
 		}
 }
 
