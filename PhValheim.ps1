@@ -6,7 +6,7 @@
 # Written and maintained by:
 #  * Brian Miller (brian@phospher.com) 
 ###############################################################################
-$VERSION="1.3"
+$VERSION="1.4"
 
 #Dirs
 $DATA_DIR = "$env:AppData\PhValheim"
@@ -49,7 +49,7 @@ if (Test-Path $DATA_DIR) {
 
 
 #Pull all worlds and store into $WORLDS
-$WORLDS = $(Invoke-RestMethod https://files.phospher.com/valheim/worlds_dev.txt).Split("`n")
+$WORLDS = $(Invoke-RestMethod https://files.phospher.com/valheim/worlds.txt).Split("`n")
 
 
 #Create useable webclient
