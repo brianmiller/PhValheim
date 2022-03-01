@@ -7,7 +7,7 @@
 # Written and maintained by:
 #  * Brian Miller (brian@phospher.com) 
 ###############################################################################
-VERSION="1.2"
+VERSION="1.3"
 
 #Dirs
 DATA_DIR="$HOME/.PhValheim"
@@ -46,9 +46,7 @@ echo "##########################################################################
 
 
 #Check local disk for DATA_DIR
-if [ -d "$DATA_DIR" ]; then
-	echo "PhValheim directory exists..."
-else
+if [ ! -d "$DATA_DIR" ]; then
         echo  "PhValheim directory does not exist, creating..."
 	mkdir -p $DATA_DIR
 fi
@@ -63,6 +61,13 @@ IFS=$(echo -en "\n\b")
 WORLDS=$(curl -s -k https://files.phospher.com/valheim/worlds.txt|dos2unix)
 
 function LaunchValheim () {
+
+	#vkBasalt (Linux reshade) (debug levels=trace,debug,info,warn,error,none)
+	export ENABLE_VKBASALT=1
+	export VKBASALT_LOG_LEVEL=error
+	export VKBASALT_LOG_FILE="vkBasalt.log"
+	export VKBASALT_CONFIG_FILE="$DATA_DIR/$WORLD/$WORLD/vkBasalt.conf"
+
 	cd $VALHEIM_DIR
 	exec="$VALHEIM_DIR/valheim.x86_64"
 	export DOORSTOP_ENABLE=TRUE
